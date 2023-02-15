@@ -1,32 +1,25 @@
-#!/usr/bin/env python3.7
-# Create a script that will stop running instances
+# Create a script that will stop instances with certain tags
 
 import boto3
 
-tag = { "Key": "Environment", "Value": "Dev"}
+region = 'us-east-1' # Insert the region of the instances
+ec2 = boto3.client('ec2', region_name=region)
+tag = {'Key':'Environment', 'Value':'Dev'}
+instance_attr = ec2.describe_instances()
+#Lists mulitple dictionaries of instance information
 
-ec2 = boto3.client('ec2', region_name='us-east-1')
+data = instance_attr["Reservations"] #Call the reservations key
 
-response = ec2.describe_instances()
+instance_list = [] #Create an emppty list
 
-
-
-    # for instance in instance_list:
-       #  if (tag in instance['Tags'] and 'running' in instance['State']['Name']):
-           #  print(instance['InstanceId'])
-            # ec2.stop_instances(InstanceIds=[instance['InstanceId']])
-
-# def lambda_handler(event, context):
-# for instance in instance_list: 
-    # print(instance)
-        
-        # if (tag in instance['Tags'] and 'running' in instance['State']['Name']):
-            # ec2.stop_instances(InstanceIds=instance)
-            # print("Stopped the following instances: \n" + instance['InstanceID']) 
-            
-            # print("Stopped the following instances: " + str(instances))
-
-
-# if (dev_tag in instance['Tags'] and 'running' in instance['State']['Name']):
-            # print(instance['InstanceId'])
-            # ec2.stop_instances(InstanceIds=[instance['InstanceId']])
+for instances in data:
+    instance = instances["Instances"] #Call the Instances key
+    for ids in instance:
+        instance_id = ids["InstanceId"]
+        instance_state = ids["State"]["Name"]
+        instance_tags = ids["Tags"]
+        #print(instance_tags)
+        if instance_state == 'running':
+            ec2.stop_instances(InstanceIds=[instance_id])
+            print("The following instance has stopped: " + instance_id)
+       
