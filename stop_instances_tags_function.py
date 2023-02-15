@@ -21,10 +21,10 @@ def is_running(instance):
 
 instance_attr = ec2.describe_instances() # Lists mulitple dictionaries of instance information
 
-reservations = instance_attr["Reservations"] # Accessing Reservation values
+reservations = instance_attr['Reservations'] # Accessing Reservation values
 
 for reservation in reservations: # Iterating through Reservation values
-    for instance in reservation["Instances"]: # Looking for Instances through the iterations
+    for instance in reservation['Instances']: # Looking for Instances through the iterations
         if (is_dev(instance) and is_running(instance)): # If Dev present (see function) and instance running
             instance_id = instance['InstanceId'] # Defining instance ID variable
             ec2.stop_instances(InstanceIds=[instance_id]) # Stop instance ids who is_dev=True and is_running=True
