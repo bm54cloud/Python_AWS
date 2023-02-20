@@ -4,7 +4,7 @@ ec2 = boto3.client("ec2")
 
 x = ec2.describe_instances()
 
-data = x["Reservations"][0]
+data = x["Reservations"]
 data_instance = data["Instances"]
 
 for i in range(len(data_instance)):
